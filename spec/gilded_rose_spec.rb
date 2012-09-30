@@ -8,10 +8,10 @@ describe GildedRose do
   ELIXIR = "Elixir of the Mongoose"
   SULFURAS = "Sulfuras, Hand of Ragnaros"
   BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert"
-  MANA_CAKE = "Conjured Mana Cake"
+  CONJURED_MANA_CAKE = "Conjured Mana Cake"
 
   before(:all) do
-    @all_items = [ VEST, BRIE, ELIXIR, SULFURAS, BACKSTAGE_PASS, MANA_CAKE ]
+    @all_items = [ VEST, BRIE, ELIXIR, SULFURAS, BACKSTAGE_PASS, CONJURED_MANA_CAKE ]
   end
 
   def find_item name
@@ -39,6 +39,10 @@ describe GildedRose do
 
   def elixir
     find_item( ELIXIR )
+  end
+
+  def conjured_item
+    find_item( CONJURED_MANA_CAKE )
   end
 
   it "should be able to find all items" do
@@ -128,6 +132,12 @@ describe GildedRose do
     original_quality = backstage_pass.quality
     subject.update_quality
     backstage_pass.quality.should eq 0
+  end
+
+  it "should degrade conjured items twice as fast as normal items" do
+    original_quality = conjured_item.quality
+    subject.update_quality
+    conjured_item.quality.should eq original_quality-2
   end
 
 end

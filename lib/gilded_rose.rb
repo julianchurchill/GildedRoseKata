@@ -30,6 +30,7 @@ class ShopItem
   def reduce_quality
     if @item.quality > MIN_QUALITY
       @item.quality -= 1 if can_degrade?
+      @item.quality -= 1 if @item.name =~ /^Conjured .*/
     end
   end
 
