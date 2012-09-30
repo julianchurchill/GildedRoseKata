@@ -23,12 +23,23 @@ class GildedRose
       item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
   end
 
+  def can_age? item
+      item.name != "Sulfuras, Hand of Ragnaros"
+  end
+
+  def can_degrade? item
+      item.name != "Sulfuras, Hand of Ragnaros"
+  end
+
   def update_quality
 
     @items.each_with_index do |item, i|
+      if can_age? item
+        item.sell_in -= 1
+      end
       if is_normal? item
         if item.quality > MIN_QUALITY
-          if item.name != "Sulfuras, Hand of Ragnaros"
+          if can_degrade? item
             item.quality -= 1
           end
         end
@@ -49,14 +60,11 @@ class GildedRose
           end
         end
       end
-      if item.name != "Sulfuras, Hand of Ragnaros"
-        item.sell_in -= 1
-      end
       if item.sell_in < 0
         if item.name != "Aged Brie"
           if item.name != "Backstage passes to a TAFKAL80ETC concert"
             if item.quality > MIN_QUALITY
-              if item.name != "Sulfuras, Hand of Ragnaros"
+              if can_degrade? item
                 item.quality -= 1
               end
             end
