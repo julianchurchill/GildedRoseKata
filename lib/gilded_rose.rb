@@ -49,9 +49,13 @@ class GildedRose
     item.sell_in < 0
   end
 
+  def age_item item
+    item.sell_in -= 1 if can_age? item
+  end
+
   def update_quality
     @items.each do |item|
-      item.sell_in -= 1 if can_age? item
+      age_item item
       if is_normal? item
         reduce_quality item
       else
