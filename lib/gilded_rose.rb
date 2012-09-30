@@ -2,6 +2,9 @@ require './lib/item.rb'
 
 class GildedRose
 
+  MIN_QUALITY = 0
+  MAX_QUALITY = 50
+
   attr_reader :items
 
   @items = []
@@ -16,49 +19,53 @@ class GildedRose
     @items << Item.new("Conjured Mana Cake", 3, 6)
   end
 
+  def is_normal? item
+      item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
+  end
+
   def update_quality
 
-    for i in 0..(@items.size-1)
-      if (@items[i].name != "Aged Brie" && @items[i].name != "Backstage passes to a TAFKAL80ETC concert")
-        if (@items[i].quality > 0)
-          if (@items[i].name != "Sulfuras, Hand of Ragnaros")
-            @items[i].quality = @items[i].quality - 1
+    @items.each_with_index do |item, i|
+      if is_normal? item
+        if (item.quality > MIN_QUALITY)
+          if (item.name != "Sulfuras, Hand of Ragnaros")
+            item.quality -= 1
           end
         end
       else
-        if (@items[i].quality < 50)
-          @items[i].quality = @items[i].quality + 1
-          if (@items[i].name == "Backstage passes to a TAFKAL80ETC concert")
-            if (@items[i].sell_in < 11)
-              if (@items[i].quality < 50)
-                @items[i].quality = @items[i].quality + 1
+        if (item.quality < MAX_QUALITY)
+          item.quality += 1
+          if (item.name == "Backstage passes to a TAFKAL80ETC concert")
+            if (item.sell_in < 11)
+              if (item.quality < MAX_QUALITY)
+                item.quality += 1
               end
             end
-            if (@items[i].sell_in < 6)
-              if (@items[i].quality < 50)
-                @items[i].quality = @items[i].quality + 1
+            if (item.sell_in < 6)
+              if (item.quality < MAX_QUALITY)
+                item.quality += 1
               end
             end
           end
         end
       end
-      if (@items[i].name != "Sulfuras, Hand of Ragnaros")
-        @items[i].sell_in = @items[i].sell_in - 1;
+      if (item.name != "Sulfuras, Hand of Ragnaros")
+        item.sell_in -= 1
       end
-      if (@items[i].sell_in < 0)
-        if (@items[i].name != "Aged Brie")
-          if (@items[i].name != "Backstage passes to a TAFKAL80ETC concert")
-            if (@items[i].quality > 0)
-              if (@items[i].name != "Sulfuras, Hand of Ragnaros")
-                @items[i].quality = @items[i].quality - 1
+      if (item.sell_in < 0)
+        if (item.name != "Aged Brie")
+          if (item.name != "Backstage passes to a TAFKAL80ETC concert")
+            if (item.quality > MIN_QUALITY)
+              if (item.name != "Sulfuras, Hand of Ragnaros")
+                item.quality -= 1
               end
             end
           else
-            @items[i].quality = @items[i].quality - @items[i].quality
+            item.quality = 0
           end
         else
-          if (@items[i].quality < 50)
-            @items[i].quality = @items[i].quality + 1
+          if (item.quality < MAX_QUALITY)
+            item.quality += 1
           end
         end
       end
