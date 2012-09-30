@@ -50,7 +50,7 @@ class GildedRose
   end
 
   def update_quality
-    @items.each_with_index do |item, i|
+    @items.each do |item|
       item.sell_in -= 1 if can_age? item
       if is_normal? item
         reduce_quality item
