@@ -51,30 +51,20 @@ class GildedRose
 
   def update_quality
     @items.each_with_index do |item, i|
-      if can_age? item
-        item.sell_in -= 1
-      end
+      item.sell_in -= 1 if can_age? item
       if is_normal? item
         reduce_quality item
       else
         increase_quality item
         if item.name == "Backstage passes to a TAFKAL80ETC concert"
-          if item.sell_in < 11
-            increase_quality item
-          end
-          if item.sell_in < 6
-            increase_quality item
-          end
+          increase_quality item if item.sell_in < 11
+          increase_quality item if item.sell_in < 6
         end
       end
       if expired? item
-        if is_normal? item
-          reduce_quality item
-        end
+        reduce_quality item if is_normal? item
         if item.name != "Aged Brie"
-          if item.name == "Backstage passes to a TAFKAL80ETC concert"
-            item.quality = 0
-          end
+          item.quality = 0 if item.name == "Backstage passes to a TAFKAL80ETC concert"
         else
           increase_quality item
         end
