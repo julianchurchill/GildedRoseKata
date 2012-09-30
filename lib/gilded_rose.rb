@@ -3,6 +3,13 @@ require './lib/item.rb'
 class ShopItem
   MIN_QUALITY = 0
   MAX_QUALITY = 50
+  QUALITY_DELTA = 1
+
+  AGE_DELTA = 1
+  EXPIRY_DAY = 0
+  SELL_IN_DOUBLE_QUALITY_DELTA_BOUNDARY = 12
+  SELL_IN_TRIPLE_QUALITY_DELTA_BOUNDARY = 5
+
   BRIE = "Aged Brie"
   SULFURAS = "Sulfuras, Hand of Ragnaros"
   BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert"
@@ -12,7 +19,7 @@ class ShopItem
   end
 
   def increase_age
-    @item.sell_in -= 1 if can_age?
+    @item.sell_in -= AGE_DELTA if can_age?
   end
 
   def can_age?
@@ -29,30 +36,32 @@ class ShopItem
 
   def reduce_quality
     if @item.quality > MIN_QUALITY
-      @item.quality -= 1 if can_degrade?
-      @item.quality -= 1 if @item.name =~ /^Conjured .*/
+      if can_degrade?
+        @item.quality -= QUALITY_DELTA
+        @item.quality -= QUALITY_DELTA if @item.name =~ /^Conjured .*/
+      end
     end
   end
 
   def increase_quality
-    @item.quality += 1 if @item.quality < MAX_QUALITY
+    @item.quality += QUALITY_DELTA if @item.quality < MAX_QUALITY
   end
 
   def add_approaching_expiry_quality_bonus
      if @item.name == BACKSTAGE_PASS
-      increase_quality if @item.sell_in < 11
-      increase_quality if @item.sell_in < 6
+      increase_quality if @item.sell_in <= SELL_IN_DOUBLE_QUALITY_DELTA_BOUNDARY
+      increase_quality if @item.sell_in <= SELL_IN_TRIPLE_QUALITY_DELTA_BOUNDARY
     end
   end
 
   def adjust_quality_of_expired_item
     reduce_quality if quality_reduces_over_time?
-    @item.quality = 0 if @item.name == BACKSTAGE_PASS
+    @item.quality = MIN_QUALITY if @item.name == BACKSTAGE_PASS
     increase_quality if @item.name == BRIE
   end
 
   def expired?
-    @item.sell_in < 0
+    @item.sell_in < EXPIRY_DAY
   end
 
   def update_quality
