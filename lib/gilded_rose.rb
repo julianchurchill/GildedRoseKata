@@ -4,6 +4,9 @@ class GildedRose
 
   MIN_QUALITY = 0
   MAX_QUALITY = 50
+  BRIE = "Aged Brie"
+  SULFURAS = "Sulfuras, Hand of Ragnaros"
+  BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert"
 
   attr_reader :items
 
@@ -20,15 +23,15 @@ class GildedRose
   end
 
   def is_normal? item
-      item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
+      item.name != BRIE && item.name != BACKSTAGE_PASS
   end
 
   def can_age? item
-      item.name != "Sulfuras, Hand of Ragnaros"
+      item.name != SULFURAS
   end
 
   def can_degrade? item
-      item.name != "Sulfuras, Hand of Ragnaros"
+      item.name != SULFURAS
   end
 
   def reduce_quality item
@@ -55,8 +58,8 @@ class GildedRose
 
   def adjust_quality_of_expired_item item
     reduce_quality item if is_normal? item
-    item.quality = 0 if item.name == "Backstage passes to a TAFKAL80ETC concert"
-    increase_quality item if item.name == "Aged Brie"
+    item.quality = 0 if item.name == BACKSTAGE_PASS
+    increase_quality item if item.name == BRIE
   end
 
   def update_quality
@@ -66,7 +69,7 @@ class GildedRose
         reduce_quality item
       else
         increase_quality item
-        if item.name == "Backstage passes to a TAFKAL80ETC concert"
+        if item.name == BACKSTAGE_PASS
           increase_quality item if item.sell_in < 11
           increase_quality item if item.sell_in < 6
         end
