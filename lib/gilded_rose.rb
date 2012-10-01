@@ -56,6 +56,16 @@ class SmartItem
       increase_quality
     end
   end
+
+  def update_quality
+    if quality_reduces_over_time
+      reduce_quality
+    else
+      increase_quality
+      add_quality_bonus_as_expiry_approaches
+    end
+    change_quality_after_expiry if expired?
+  end
 end
 
 class GildedRose
@@ -81,13 +91,7 @@ class GildedRose
     @items.each do |i|
       item = SmartItem.new i
       item.increase_age
-      if item.quality_reduces_over_time
-        item.reduce_quality
-      else
-        item.increase_quality
-        item.add_quality_bonus_as_expiry_approaches
-      end
-      item.change_quality_after_expiry if item.expired?
+      item.update_quality
     end
   end
 
