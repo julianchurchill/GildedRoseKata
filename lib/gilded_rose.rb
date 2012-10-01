@@ -39,10 +39,14 @@ class GildedRose
     end
   end
 
+  def quality_reduces_over_time item
+    item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
+  end
+
   def update_quality
     @items.each do |item|
       increase_age item
-      if item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
+      if quality_reduces_over_time item
         reduce_quality item
       else
         increase_quality item
