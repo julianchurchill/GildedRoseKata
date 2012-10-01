@@ -68,12 +68,10 @@ class GildedRose
         add_quality_bonus_as_expiry_approaches item
       end
       if expired? item
-        if item.name != "Aged Brie"
-          if item.name != "Backstage passes to a TAFKAL80ETC concert"
-            reduce_quality item
-          else
-            item.quality = MIN_QUALITY
-          end
+        if quality_reduces_over_time item
+          reduce_quality item
+        elsif item.name == "Backstage passes to a TAFKAL80ETC concert"
+          item.quality = MIN_QUALITY
         else
           increase_quality item
         end
