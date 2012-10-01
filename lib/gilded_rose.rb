@@ -27,6 +27,12 @@ class GildedRose
     end
   end
 
+  def increase_quality item
+    if item.quality < MAX_QUALITY
+      item.quality += 1
+    end
+  end
+
   def update_quality
     @items.each do |item|
       if item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
@@ -36,14 +42,10 @@ class GildedRose
           item.quality += 1
           if item.name == "Backstage passes to a TAFKAL80ETC concert"
             if item.sell_in < 11
-              if item.quality < MAX_QUALITY
-                item.quality += 1
-              end
+              increase_quality item
             end
             if item.sell_in < 6
-              if item.quality < MAX_QUALITY
-                item.quality += 1
-              end
+              increase_quality item
             end
           end
         end
@@ -59,9 +61,7 @@ class GildedRose
             item.quality = MIN_QUALITY
           end
         else
-          if item.quality < MAX_QUALITY
-            item.quality += 1
-          end
+          increase_quality item
         end
       end
     end
