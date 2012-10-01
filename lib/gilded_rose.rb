@@ -35,6 +35,17 @@ class SmartItem
       @item.quality += 1
     end
   end
+
+  def add_quality_bonus_as_expiry_approaches
+    if @item.name == "Backstage passes to a TAFKAL80ETC concert"
+      if @item.sell_in < 11
+        increase_quality
+      end
+      if @item.sell_in < 6
+        increase_quality
+      end
+    end
+  end
 end
 
 class GildedRose
@@ -74,17 +85,6 @@ class GildedRose
     item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
   end
 
-  def add_quality_bonus_as_expiry_approaches item
-    if item.name == "Backstage passes to a TAFKAL80ETC concert"
-      if item.sell_in < 11
-        increase_quality item
-      end
-      if item.sell_in < 6
-        increase_quality item
-      end
-    end
-  end
-
   def change_quality_after_expiry item
     if quality_reduces_over_time item
       reduce_quality item
@@ -103,7 +103,7 @@ class GildedRose
         item.reduce_quality
       else
         item.increase_quality
-        add_quality_bonus_as_expiry_approaches i
+        item.add_quality_bonus_as_expiry_approaches
       end
       change_quality_after_expiry i if item.expired?
     end
