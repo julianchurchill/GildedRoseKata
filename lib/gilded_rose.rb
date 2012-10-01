@@ -4,12 +4,16 @@ class SmartItem
   MAX_QUALITY = 50
   MIN_QUALITY = 0
 
+  AGED_BRIE = "Aged Brie"
+  BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
+  SULFURAS = "Sulfuras, Hand of Ragnaros"
+
   def initialize item
     @item = item
   end
 
   def increase_age
-    if @item.name != "Sulfuras, Hand of Ragnaros"
+    if @item.name != SULFURAS
       @item.sell_in -= 1;
     end
   end
@@ -20,14 +24,14 @@ class SmartItem
 
   def reduce_quality
     if @item.quality > MIN_QUALITY
-      if @item.name != "Sulfuras, Hand of Ragnaros"
+      if @item.name != SULFURAS
         @item.quality -= 1
       end
     end
   end
 
   def quality_reduces_over_time
-    @item.name != "Aged Brie" && @item.name != "Backstage passes to a TAFKAL80ETC concert"
+    @item.name != AGED_BRIE && @item.name != BACKSTAGE_PASSES
   end
 
   def increase_quality
@@ -37,7 +41,7 @@ class SmartItem
   end
 
   def add_quality_bonus_as_expiry_approaches
-    if @item.name == "Backstage passes to a TAFKAL80ETC concert"
+    if @item.name == BACKSTAGE_PASSES
       if @item.sell_in < 11
         increase_quality
       end
@@ -50,7 +54,7 @@ class SmartItem
   def change_quality_after_expiry
     if quality_reduces_over_time
       reduce_quality
-    elsif @item.name == "Backstage passes to a TAFKAL80ETC concert"
+    elsif @item.name == BACKSTAGE_PASSES
       @item.quality = MIN_QUALITY
     else
       increase_quality
@@ -69,9 +73,6 @@ class SmartItem
 end
 
 class GildedRose
-
-  MAX_QUALITY = 50
-  MIN_QUALITY = 0
 
   attr_reader :items
 
