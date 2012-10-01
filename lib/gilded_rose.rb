@@ -43,6 +43,10 @@ class GildedRose
     item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
   end
 
+  def expired? item
+    item.sell_in < 0
+  end
+
   def update_quality
     @items.each do |item|
       increase_age item
@@ -59,7 +63,7 @@ class GildedRose
           end
         end
       end
-      if item.sell_in < 0
+      if expired? item
         if item.name != "Aged Brie"
           if item.name != "Backstage passes to a TAFKAL80ETC concert"
             reduce_quality item
