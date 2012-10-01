@@ -10,6 +10,10 @@ class SmartItem
       @item.sell_in -= 1;
     end
   end
+
+  def expired?
+    @item.sell_in < 0
+  end
 end
 
 class GildedRose
@@ -45,18 +49,8 @@ class GildedRose
     end
   end
 
-  def increase_age item
-    if item.name != "Sulfuras, Hand of Ragnaros"
-      item.sell_in -= 1;
-    end
-  end
-
   def quality_reduces_over_time item
     item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
-  end
-
-  def expired? item
-    item.sell_in < 0
   end
 
   def add_quality_bonus_as_expiry_approaches item
@@ -90,7 +84,7 @@ class GildedRose
         increase_quality i
         add_quality_bonus_as_expiry_approaches i
       end
-      change_quality_after_expiry i if expired? i
+      change_quality_after_expiry i if item.expired?
     end
   end
 
