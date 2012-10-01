@@ -58,6 +58,16 @@ class GildedRose
     end
   end
 
+  def change_quality_after_expiry item
+    if quality_reduces_over_time item
+      reduce_quality item
+    elsif item.name == "Backstage passes to a TAFKAL80ETC concert"
+      item.quality = MIN_QUALITY
+    else
+      increase_quality item
+    end
+  end
+
   def update_quality
     @items.each do |item|
       increase_age item
@@ -67,15 +77,7 @@ class GildedRose
         increase_quality item
         add_quality_bonus_as_expiry_approaches item
       end
-      if expired? item
-        if quality_reduces_over_time item
-          reduce_quality item
-        elsif item.name == "Backstage passes to a TAFKAL80ETC concert"
-          item.quality = MIN_QUALITY
-        else
-          increase_quality item
-        end
-      end
+      change_quality_after_expiry item if expired? item
     end
   end
 
