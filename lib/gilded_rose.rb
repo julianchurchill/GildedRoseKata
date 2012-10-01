@@ -1,5 +1,17 @@
 require './lib/item.rb'
 
+class SmartItem
+  def initialize item
+    @item = item
+  end
+
+  def increase_age
+    if @item.name != "Sulfuras, Hand of Ragnaros"
+      @item.sell_in -= 1;
+    end
+  end
+end
+
 class GildedRose
 
   MAX_QUALITY = 50
@@ -69,15 +81,16 @@ class GildedRose
   end
 
   def update_quality
-    @items.each do |item|
-      increase_age item
-      if quality_reduces_over_time item
-        reduce_quality item
+    @items.each do |i|
+      item = SmartItem.new i
+      item.increase_age
+      if quality_reduces_over_time i
+        reduce_quality i
       else
-        increase_quality item
-        add_quality_bonus_as_expiry_approaches item
+        increase_quality i
+        add_quality_bonus_as_expiry_approaches i
       end
-      change_quality_after_expiry item if expired? item
+      change_quality_after_expiry i if expired? i
     end
   end
 
