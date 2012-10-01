@@ -1,6 +1,9 @@
 require './lib/item.rb'
 
 class SmartItem
+  MAX_QUALITY = 50
+  MIN_QUALITY = 0
+
   def initialize item
     @item = item
   end
@@ -13,6 +16,24 @@ class SmartItem
 
   def expired?
     @item.sell_in < 0
+  end
+
+  def reduce_quality
+    if @item.quality > MIN_QUALITY
+      if @item.name != "Sulfuras, Hand of Ragnaros"
+        @item.quality -= 1
+      end
+    end
+  end
+
+  def quality_reduces_over_time
+    @item.name != "Aged Brie" && @item.name != "Backstage passes to a TAFKAL80ETC concert"
+  end
+
+  def increase_quality
+    if @item.quality < MAX_QUALITY
+      @item.quality += 1
+    end
   end
 end
 
@@ -78,10 +99,10 @@ class GildedRose
     @items.each do |i|
       item = SmartItem.new i
       item.increase_age
-      if quality_reduces_over_time i
-        reduce_quality i
+      if item.quality_reduces_over_time
+        item.reduce_quality
       else
-        increase_quality i
+        item.increase_quality
         add_quality_bonus_as_expiry_approaches i
       end
       change_quality_after_expiry i if item.expired?
