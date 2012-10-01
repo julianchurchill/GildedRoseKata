@@ -47,6 +47,17 @@ class GildedRose
     item.sell_in < 0
   end
 
+  def add_quality_bonus_as_expiry_approaches item
+    if item.name == "Backstage passes to a TAFKAL80ETC concert"
+      if item.sell_in < 11
+        increase_quality item
+      end
+      if item.sell_in < 6
+        increase_quality item
+      end
+    end
+  end
+
   def update_quality
     @items.each do |item|
       increase_age item
@@ -54,14 +65,7 @@ class GildedRose
         reduce_quality item
       else
         increase_quality item
-        if item.name == "Backstage passes to a TAFKAL80ETC concert"
-          if item.sell_in < 11
-            increase_quality item
-          end
-          if item.sell_in < 6
-            increase_quality item
-          end
-        end
+        add_quality_bonus_as_expiry_approaches item
       end
       if expired? item
         if item.name != "Aged Brie"
