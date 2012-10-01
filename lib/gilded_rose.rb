@@ -33,8 +33,15 @@ class GildedRose
     end
   end
 
+  def increase_age item
+    if item.name != "Sulfuras, Hand of Ragnaros"
+      item.sell_in -= 1;
+    end
+  end
+
   def update_quality
     @items.each do |item|
+      increase_age item
       if item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
         reduce_quality item
       else
@@ -47,9 +54,6 @@ class GildedRose
             increase_quality item
           end
         end
-      end
-      if item.name != "Sulfuras, Hand of Ragnaros"
-        item.sell_in -= 1;
       end
       if item.sell_in < 0
         if item.name != "Aged Brie"
