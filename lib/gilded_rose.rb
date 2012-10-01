@@ -30,7 +30,7 @@ class SmartItem
     end
   end
 
-  def quality_reduces_over_time
+  def quality_reduces_over_time?
     @item.name != AGED_BRIE && @item.name != BACKSTAGE_PASSES
   end
 
@@ -52,7 +52,7 @@ class SmartItem
   end
 
   def change_quality_after_expiry
-    if quality_reduces_over_time
+    if quality_reduces_over_time?
       reduce_quality
     elsif @item.name == BACKSTAGE_PASSES
       @item.quality = MIN_QUALITY
@@ -62,7 +62,7 @@ class SmartItem
   end
 
   def update_quality
-    if quality_reduces_over_time
+    if quality_reduces_over_time?
       reduce_quality
     else
       increase_quality
