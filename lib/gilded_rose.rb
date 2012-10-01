@@ -19,14 +19,18 @@ class GildedRose
     @items << Item.new("Conjured Mana Cake", 3, 6)
   end
 
+  def reduce_quality item
+    if item.quality > MIN_QUALITY
+      if item.name != "Sulfuras, Hand of Ragnaros"
+        item.quality -= 1
+      end
+    end
+  end
+
   def update_quality
     @items.each do |item|
       if item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
-        if item.quality > MIN_QUALITY
-          if item.name != "Sulfuras, Hand of Ragnaros"
-            item.quality -= 1
-          end
-        end
+        reduce_quality item
       else
         if item.quality < MAX_QUALITY
           item.quality += 1
@@ -50,11 +54,7 @@ class GildedRose
       if item.sell_in < 0
         if item.name != "Aged Brie"
           if item.name != "Backstage passes to a TAFKAL80ETC concert"
-            if item.quality > MIN_QUALITY
-              if item.name != "Sulfuras, Hand of Ragnaros"
-                item.quality -= 1
-              end
-            end
+            reduce_quality item
           else
             item.quality = MIN_QUALITY
           end
