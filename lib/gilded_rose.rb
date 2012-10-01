@@ -46,6 +46,16 @@ class SmartItem
       end
     end
   end
+
+  def change_quality_after_expiry
+    if quality_reduces_over_time
+      reduce_quality
+    elsif @item.name == "Backstage passes to a TAFKAL80ETC concert"
+      @item.quality = MIN_QUALITY
+    else
+      increase_quality
+    end
+  end
 end
 
 class GildedRose
@@ -67,34 +77,6 @@ class GildedRose
     @items << Item.new("Conjured Mana Cake", 3, 6)
   end
 
-  def reduce_quality item
-    if item.quality > MIN_QUALITY
-      if item.name != "Sulfuras, Hand of Ragnaros"
-        item.quality -= 1
-      end
-    end
-  end
-
-  def increase_quality item
-    if item.quality < MAX_QUALITY
-      item.quality += 1
-    end
-  end
-
-  def quality_reduces_over_time item
-    item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
-  end
-
-  def change_quality_after_expiry item
-    if quality_reduces_over_time item
-      reduce_quality item
-    elsif item.name == "Backstage passes to a TAFKAL80ETC concert"
-      item.quality = MIN_QUALITY
-    else
-      increase_quality item
-    end
-  end
-
   def update_quality
     @items.each do |i|
       item = SmartItem.new i
@@ -105,7 +87,7 @@ class GildedRose
         item.increase_quality
         item.add_quality_bonus_as_expiry_approaches
       end
-      change_quality_after_expiry i if item.expired?
+      item.change_quality_after_expiry if item.expired?
     end
   end
 
