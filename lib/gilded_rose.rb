@@ -12,9 +12,6 @@ class SmartItem
     @item.sell_in -= 1;
   end
 
-  def add_quality_bonus_as_expiry_approaches
-  end
-
   def update_quality
     change_basic_quality
     change_quality_after_expiry if expired?
@@ -40,7 +37,6 @@ end
 class AgedBrieSmartItem < SmartItem
   def change_basic_quality
     increase_quality
-    add_quality_bonus_as_expiry_approaches
   end
 
   def increase_quality
