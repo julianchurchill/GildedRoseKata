@@ -32,15 +32,15 @@ class SmartItem
   def expired?
     @item.sell_in < 0
   end
+
+  def increase_quality
+    @item.quality += 1 if @item.quality < MAX_QUALITY
+  end
 end
 
 class AgedBrieSmartItem < SmartItem
   def change_basic_quality
     increase_quality
-  end
-
-  def increase_quality
-    @item.quality += 1 if @item.quality < MAX_QUALITY
   end
 
   def change_quality_after_expiry
@@ -54,17 +54,9 @@ class BackstagePassesSmartItem < SmartItem
     add_quality_bonus_as_expiry_approaches
   end
 
-  def increase_quality
-    @item.quality += 1 if @item.quality < MAX_QUALITY
-  end
-
   def add_quality_bonus_as_expiry_approaches
-    if @item.sell_in < 11
-      increase_quality
-    end
-    if @item.sell_in < 6
-      increase_quality
-    end
+    increase_quality if @item.sell_in < 11
+    increase_quality if @item.sell_in < 6
   end
 
   def change_quality_after_expiry
