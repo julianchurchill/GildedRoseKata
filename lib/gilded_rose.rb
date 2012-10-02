@@ -39,12 +39,9 @@ class SmartItem
 end
 
 class AgedBrieSmartItem < SmartItem
-  def change_basic_quality
+  def update_quality
     increase_quality
-  end
-
-  def change_quality_after_expiry
-    increase_quality
+    increase_quality if expired?
   end
 end
 
