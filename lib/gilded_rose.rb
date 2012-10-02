@@ -12,34 +12,28 @@ class SmartItem
     @item.sell_in -= 1;
   end
 
-  def expired?
-    @item.sell_in < 0
-  end
-
-  def reduce_quality
-    @item.quality -= 1 if @item.quality > MIN_QUALITY
-  end
-
-  def increase_quality
-    if @item.quality < MAX_QUALITY
-      @item.quality += 1
-    end
-  end
-
   def add_quality_bonus_as_expiry_approaches
   end
 
-  def change_quality_after_expiry
-    reduce_quality
+  def update_quality
+    change_basic_quality
+    change_quality_after_expiry if expired?
   end
 
   def change_basic_quality
     reduce_quality
   end
 
-  def update_quality
-    change_basic_quality
-    change_quality_after_expiry if expired?
+  def reduce_quality
+    @item.quality -= 1 if @item.quality > MIN_QUALITY
+  end
+
+  def change_quality_after_expiry
+    reduce_quality
+  end
+
+  def expired?
+    @item.sell_in < 0
   end
 end
 
@@ -47,6 +41,10 @@ class AgedBrieSmartItem < SmartItem
   def change_basic_quality
     increase_quality
     add_quality_bonus_as_expiry_approaches
+  end
+
+  def increase_quality
+    @item.quality += 1 if @item.quality < MAX_QUALITY
   end
 
   def change_quality_after_expiry
@@ -58,6 +56,10 @@ class BackstagePassesSmartItem < SmartItem
   def change_basic_quality
     increase_quality
     add_quality_bonus_as_expiry_approaches
+  end
+
+  def increase_quality
+    @item.quality += 1 if @item.quality < MAX_QUALITY
   end
 
   def add_quality_bonus_as_expiry_approaches
