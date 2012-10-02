@@ -6,16 +6,13 @@ class SmartItem
 
   AGED_BRIE = "Aged Brie"
   BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
-  SULFURAS = "Sulfuras, Hand of Ragnaros"
 
   def initialize item
     @item = item
   end
 
   def increase_age
-    if @item.name != SULFURAS
-      @item.sell_in -= 1;
-    end
+    @item.sell_in -= 1;
   end
 
   def expired?
@@ -23,11 +20,7 @@ class SmartItem
   end
 
   def reduce_quality
-    if @item.quality > MIN_QUALITY
-      if @item.name != SULFURAS
-        @item.quality -= 1
-      end
-    end
+    @item.quality -= 1 if @item.quality > MIN_QUALITY
   end
 
   def quality_reduces_over_time?
@@ -72,6 +65,21 @@ class SmartItem
   end
 end
 
+class SulfurasSmartItem < SmartItem
+  def increase_age
+  end
+
+  def reduce_quality
+  end
+end
+
+SULFURAS = "Sulfuras, Hand of Ragnaros"
+
+def smart_item_factory item
+  return SulfurasSmartItem.new item if item.name == SULFURAS
+  return SmartItem.new item
+end
+
 class GildedRose
 
   attr_reader :items
@@ -90,7 +98,7 @@ class GildedRose
 
   def update_quality
     @items.each do |i|
-      item = SmartItem.new i
+      item = smart_item_factory i
       item.increase_age
       item.update_quality
     end
