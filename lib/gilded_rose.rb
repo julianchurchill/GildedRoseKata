@@ -6,10 +6,11 @@ class SmartItem
   def initialize item
     @item = item
     @degradation_rate = 1
+    @sell_in_rate = 1
   end
 
   def increase_age
-    @item.sell_in -= 1;
+    @item.sell_in -= @sell_in_rate;
   end
 
   def update_quality
