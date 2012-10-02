@@ -13,20 +13,12 @@ class SmartItem
   end
 
   def update_quality
-    change_basic_quality
-    change_quality_after_expiry if expired?
-  end
-
-  def change_basic_quality
     reduce_quality
+    reduce_quality if expired?
   end
 
   def reduce_quality
     @item.quality -= 1 if @item.quality > MIN_QUALITY
-  end
-
-  def change_quality_after_expiry
-    reduce_quality
   end
 
   def expired?
