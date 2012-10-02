@@ -46,13 +46,9 @@ class BackstagePassesSmartItem < QualityIncreasingSmartItem
       @item.quality = MIN_QUALITY
     else
       increase_quality
-      add_quality_bonus_as_expiry_approaches
+      increase_quality if @item.sell_in < 11
+      increase_quality if @item.sell_in < 6
     end
-  end
-
-  def add_quality_bonus_as_expiry_approaches
-    increase_quality if @item.sell_in < 11
-    increase_quality if @item.sell_in < 6
   end
 end
 
