@@ -72,11 +72,18 @@ class SulfurasSmartItem < SmartItem
   end
 end
 
+class ConjuredSmartItem < SmartItem
+  def reduce_quality
+    @item.quality -= 2 if @item.quality > MIN_QUALITY
+  end
+end
+
 AGED_BRIE = "Aged Brie"
 BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
 SULFURAS = "Sulfuras, Hand of Ragnaros"
 
 def smart_item_factory item
+  return ConjuredSmartItem.new item if item.name =~ /^Conjured .*/
   return AgedBrieSmartItem.new item if item.name == AGED_BRIE
   return BackstagePassesSmartItem.new item if item.name == BACKSTAGE_PASSES
   return SulfurasSmartItem.new item if item.name == SULFURAS

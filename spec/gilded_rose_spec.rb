@@ -33,6 +33,10 @@ describe GildedRose do
     find_item( SULFURAS )
   end
 
+  def conjured_item
+    find_item( MANA_CAKE )
+  end
+
   def vest
     find_item( VEST )
   end
@@ -128,6 +132,12 @@ describe GildedRose do
     original_quality = backstage_pass.quality
     subject.update_quality
     backstage_pass.quality.should eq 0
+  end
+
+  it "should reduce quality of conjured items twice as fast as normal items" do
+    original_quality = conjured_item.quality
+    subject.update_quality
+    conjured_item.quality.should eq original_quality-2
   end
 
 end
