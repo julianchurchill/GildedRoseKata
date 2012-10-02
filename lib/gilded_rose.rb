@@ -5,6 +5,7 @@ class SmartItem
 
   def initialize item
     @item = item
+    @degradation_rate = 1
   end
 
   def increase_age
@@ -17,7 +18,7 @@ class SmartItem
   end
 
   def reduce_quality
-    @item.quality -= 1 if @item.quality > MIN_QUALITY
+    @item.quality -= @degradation_rate if @item.quality > MIN_QUALITY
   end
 
   def expired?
@@ -61,8 +62,9 @@ class SulfurasSmartItem < SmartItem
 end
 
 class ConjuredSmartItem < SmartItem
-  def reduce_quality
-    @item.quality -= 2 if @item.quality > MIN_QUALITY
+  def initialize item
+    super item
+    @degradation_rate = 2
   end
 end
 
