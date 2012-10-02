@@ -49,18 +49,18 @@ class AgedBrieSmartItem < SmartItem
 end
 
 class BackstagePassesSmartItem < SmartItem
-  def change_basic_quality
-    increase_quality
-    add_quality_bonus_as_expiry_approaches
+  def update_quality
+    if expired?
+      @item.quality = MIN_QUALITY
+    else
+      increase_quality
+      add_quality_bonus_as_expiry_approaches
+    end
   end
 
   def add_quality_bonus_as_expiry_approaches
     increase_quality if @item.sell_in < 11
     increase_quality if @item.sell_in < 6
-  end
-
-  def change_quality_after_expiry
-    @item.quality = MIN_QUALITY
   end
 end
 
