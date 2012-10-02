@@ -1,7 +1,6 @@
 require './lib/item.rb'
 
 class SmartItem
-  MAX_QUALITY = 50
   MIN_QUALITY = 0
 
   def initialize item
@@ -24,20 +23,24 @@ class SmartItem
   def expired?
     @item.sell_in < 0
   end
+end
+
+class QualityIncreasingSmartItem < SmartItem
+  MAX_QUALITY = 50
 
   def increase_quality
     @item.quality += 1 if @item.quality < MAX_QUALITY
   end
 end
 
-class AgedBrieSmartItem < SmartItem
+class AgedBrieSmartItem < QualityIncreasingSmartItem
   def update_quality
     increase_quality
     increase_quality if expired?
   end
 end
 
-class BackstagePassesSmartItem < SmartItem
+class BackstagePassesSmartItem < QualityIncreasingSmartItem
   def update_quality
     if expired?
       @item.quality = MIN_QUALITY
