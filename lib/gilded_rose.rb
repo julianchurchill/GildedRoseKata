@@ -5,7 +5,6 @@ class SmartItem
   MIN_QUALITY = 0
 
   AGED_BRIE = "Aged Brie"
-  BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
 
   def initialize item
     @item = item
@@ -24,7 +23,7 @@ class SmartItem
   end
 
   def quality_reduces_over_time?
-    @item.name != AGED_BRIE && @item.name != BACKSTAGE_PASSES
+    @item.name != AGED_BRIE
   end
 
   def increase_quality
@@ -34,21 +33,11 @@ class SmartItem
   end
 
   def add_quality_bonus_as_expiry_approaches
-    if @item.name == BACKSTAGE_PASSES
-      if @item.sell_in < 11
-        increase_quality
-      end
-      if @item.sell_in < 6
-        increase_quality
-      end
-    end
   end
 
   def change_quality_after_expiry
     if quality_reduces_over_time?
       reduce_quality
-    elsif @item.name == BACKSTAGE_PASSES
-      @item.quality = MIN_QUALITY
     else
       increase_quality
     end
@@ -65,6 +54,25 @@ class SmartItem
   end
 end
 
+class BackstagePassesSmartItem < SmartItem
+  def quality_reduces_over_time?
+    false
+  end
+
+  def add_quality_bonus_as_expiry_approaches
+    if @item.sell_in < 11
+      increase_quality
+    end
+    if @item.sell_in < 6
+      increase_quality
+    end
+  end
+
+  def change_quality_after_expiry
+    @item.quality = MIN_QUALITY
+  end
+end
+
 class SulfurasSmartItem < SmartItem
   def increase_age
   end
@@ -73,9 +81,11 @@ class SulfurasSmartItem < SmartItem
   end
 end
 
+BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
 SULFURAS = "Sulfuras, Hand of Ragnaros"
 
 def smart_item_factory item
+  return BackstagePassesSmartItem.new item if item.name == BACKSTAGE_PASSES
   return SulfurasSmartItem.new item if item.name == SULFURAS
   return SmartItem.new item
 end
